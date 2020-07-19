@@ -1,0 +1,59 @@
+version: '3.7'
+services:
+ postgres:
+  restart: always
+  container_name: dock_django_postgres
+  image: postgres:9.6.5
+  #build:
+  # context: .
+  # dockerfile: dockerfiles/docker_postgres.conf
+  volumes:
+   - ./dbdata:/var/lib/postgresql/data
+  environment:
+    POSTGRES_USER: "mizantrop"
+    POSTGRES_PASSWORD: "stoppush"
+    POSTGRES_DB: "app"
+    PGDATA: /var/lib/postgresql/data
+  ports:
+   - "5432:5432"
+  expose:
+   - 5432
+ django:
+  restart: always
+  container_name: dock_django_django
+  volumes:
+   - ./code:/code
+   - sock:/sock
+  build: 
+   context: .
+   dockerfile: dockerfiles/docker_django.conf
+  depends_on:
+   - postgres
+  command: uwsgi --ini /etc/uwsgi.ini
+  #links:
+  # - postgres
+  #command: bash -c "python /code/app/manage.py collectstatic --noinput && python /code/app/manage.py migrate && python /code/app/manage.py runserver 0.0.0.0:8001"
+  #command: uwsgi --ini /etc/uwsgi.ini && bash -c "python /code/app/manage.py collectstatic --noinput && python /code/app/manage.py migrate"
+ nginx:
+  restart: always
+  container_name: dock_django_nginx
+  volumes:
+   - ./code:/code
+   - sock:/sock
+  build:
+   context: .
+   dockerfile: dockerfiles/docker_nginx.conf
+  depends_on:
+   - django
+  expose:
+    - 8000
+  ports:
+    - "8000:8000"
+volumes:
+ sock:
+ #dbdata:
+ #  driver: local
+ #pgconf:
+ #  driver: local
+ #pglog: 
+ #  driver: local

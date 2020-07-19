@@ -1,0 +1,12 @@
+django
+uwsgi
+psycopg2
+django-cors-headers
+django-redis
+djangorestframework
+Pillow
+pytz
+redis
+sshtunnel
+urllib3
+django-debug-toolbar
