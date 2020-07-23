@@ -23,6 +23,7 @@ services:
   container_name: dock_django_django
   volumes:
    - ./code:/code
+   - ../inexsy_front/dist:/code/front
    - sock:/sock
   build: 
    context: .
@@ -39,6 +40,7 @@ services:
   container_name: dock_django_nginx
   volumes:
    - ./code:/code
+   - ../inexsy_front/dist:/code/front
    - sock:/sock
   build:
    context: .
@@ -46,9 +48,12 @@ services:
   depends_on:
    - django
   expose:
-    - 8000
+    - 80
+   # - 8080
   ports:
-    - "8000:8000"
+    - "80:80"
+   # - "8080"
+  network_mode: "host"
 volumes:
  sock:
  #dbdata:
