@@ -16,11 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
-from app.views import index
+from app.views import LoginView, UserCreate
+from rest_framework import routers
+#from tutorial.quickstart import views
+
+router = routers.DefaultRouter()
 
 urlpatterns = [
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
-    url(r'^$', index),
+    path("api/sign_up/", UserCreate.as_view(), name="user_create"),
+    path("api/sign_in/", LoginView.as_view(), name="user_login"),
+    #url(r'^$', index),
     #path('api/', include('galleries.urls')),
     #path('api/', include('todo.urls')),
 ]

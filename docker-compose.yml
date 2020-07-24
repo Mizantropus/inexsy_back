@@ -35,6 +35,11 @@ services:
   # - postgres
   #command: bash -c "python /code/app/manage.py collectstatic --noinput && python /code/app/manage.py migrate && python /code/app/manage.py runserver 0.0.0.0:8001"
   #command: uwsgi --ini /etc/uwsgi.ini && bash -c "python /code/app/manage.py collectstatic --noinput && python /code/app/manage.py migrate"
+ redis:
+  restart: always
+  image: redis:latest
+  expose:
+    - "6379"
  nginx:
   restart: always
   container_name: dock_django_nginx
